@@ -1,4 +1,4 @@
-function dYdt=cadynamicwithIP3_dyn(t,Y)
+function dYdt=cadynamicwithIP3_dyn(t,Ct,Y)
 %%% this file is based on the model in the paper by Jungmin han
 %%%  and Vipul Periwal " A mathematical model for calcium dynamics..."
 %%% Y =[C_cyto;C_mam; C_mito;ADPM;ADPC;NADPHM;VM; P; P_mam; h42;nh42; ] \
@@ -38,10 +38,15 @@ RV1 = 2000;
 RV2 = 10;
 RV3 = 15;
 
-fc = 1;
-fm = 1;
+% fc = 1;
+% fm = 1;
+% fn = 1;
+% fer = 1;
+
+fc = 0.01;
+fer = 0.01;
+fm =  1;
 fn = 1;
-fer = 1;
 
 Amt =  15000;
 Act = 2500;
@@ -49,7 +54,7 @@ a1 = 10;
 a2 = 3.43;
 Cpc = 1.8;
 
-Ct=50;
+
 NADt=250;
 
 Dc=0.1;
@@ -113,7 +118,8 @@ ATPc = Act - ADPc;
 %% IPR model ###
  
 
-Cp0=700;
+%Cp0=700;
+Cp0=100;
 q26=10500;
 q62=4010;
 phi=q26/(q26+q62);
@@ -130,7 +136,8 @@ V24=62+880/((P)^2+4);
 k24=0.35;
 km24=80;
 
-Cp=Cp0*(Cer/680);
+%Cp=Cp0*(Cer/680);
+Cp=Cp0*(Cer/400);
 mi24=Cp^3/(Cp^3+k24^3);
 hi24=km24^2/(Cp^2+km24^2);
 
@@ -188,9 +195,16 @@ J_3K = v_3k*(Y(1)^4/(Y(1)^4+K_D^4))*Y(8)/(Y(8)+K_3);
 
 Jipr	= kipr*Oipr*(Cer-C);
 Jleak	= kleak*(Cer-C);
-Jserca	= Vs*(C^2/(Ks^2+C^2))*(ATPc/(Ke+ATPc));
+Jserca	= Vs*(C^2/(Ks^2+C^2))*(ATPc/(Ke+ATPc));%*(1-tanh ((Cer-200)/200/0.1))/2; 
 Jncx	= Vncx*(Cm/C)*exp(p2*Vm);
-Jmcu	= Vmcu*(C/K1)*(1+C/K1)^3*exp(p1*Vm)/((1+C/K1)^4+(L/(1+C/K2)^2.8));
+%Jmcu	= Vmcu*(C/K1)*(1+C/K1)^3*exp(p1*Vm)/((1+C/K1)^4+(L/(1+C/K2)^2.8));
+
+mcu_g = 0.0046875; 
+mcu_km = 19;
+mcu_N = 200;
+mcu_p =  0.9;
+ 
+Jmcu    = mcu_p*mcu_N*mcu_g*(Y(7)-12.9*log(Y(1)/Y(3)))/(1+mcu_km/Y(1));%% PNAS Mitochondrial calcium uptake
 Jdiff	= Dc*(Cnd-C);
 
 

@@ -6,12 +6,16 @@ RV1 = 2000;
 RV2 = 10;
 RV3 = 15;
 
-fc = 1;
-fm = 1;
+% fc = 1;
+% fm = 1;
+% fn = 1;
+% fer = 1;
+fc = 0.01;
+fer = 0.01;
+fm =  1;
 fn = 1;
-fer = 1;
 
-Ct=50;
+Ct=3000;
 NADt=250;
 
 
@@ -25,10 +29,16 @@ NADt=250;
 %%% Y =[C_cyto;C_mam; C_mito;ADPM;ADPC;NADPHM;VM; P; P_mam; h42;nh42; ] 
 %Y0 = [0.1; 0.1;0.1;7;1.5;0.1;0;0;0;0;0];
 options= odeset('MaxStep',0.01);
-Y0 =[0.04561;0.055717;0.00013841;9622;2311.7;54.196;154.9;0;0;0.99863;0.9975];
+%Y0 =[0.04561;0.055717;0.00013841;9622;2311.7;54.196;154.9;0;0;0.99863;0.9975];
+Y0 =[5;0.1;0.1;6100;1150;90;154;0.1;0;0.99863;0.9975];
+C0 = Y0(1);
+Cnd0 = Y0(2);
+Cm0 = Y0(3);
+
+Cer0 = RV2*fer*(Ct-C0/fc-Cm0/(fm*RV3)-Cnd0/(fn*RV1));
 %[t, Y] = ode15s(@(t,Y)cadynamicwithIP3(t,Y),[0,100],Y0,options);
 %[t, Y] = ode15s(@(t,Y)cadynamicwithIP3(t,Y),[0,100],Y0);
-[t, Y] = ode15s(@(t,Y)cadynamicwithIP3_dyn(t,Y),[0,1800],Y0);
+[t, Y] = ode15s(@(t,Y)cadynamicwithIP3_dyn(t,Ct,Y),[0,1000],Y0);
 C = Y(:,1);
 Cnd = Y(:,2);
 Cm = Y(:,3);
@@ -49,7 +59,7 @@ hold off
 yyaxis right
 plot(t,Cer,'r-');
 ylabel('[Ca^{2+}]_{ER}(\mu M)')
-legend('[Ca^{2+}]_{cyto}','[Ca^{2+}]_{mi}','Ca^{2+}]_{mito}(\mu M)', '[Ca^{2+}]_{ER}')
+legend('[Ca^{2+}]_{cyto}','[Ca^{2+}]_{MAM}','Ca^{2+}]_{mito}(\mu M)', '[Ca^{2+}]_{ER}')
 % figure(3)
 % plot(t,Y(:,2),'k')
 % xlabel('Time')
