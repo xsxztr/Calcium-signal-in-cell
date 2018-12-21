@@ -23,8 +23,8 @@ nh42 = Y(11);
 
 Ps=0.3;
 
-RS1 = 0.2;
-RS2 = 0.1;
+RS1 = 0.3;
+RS2 = 0.25;
 kipr=0.3;
 nkipr=0.3;
 Vmcu=0.00005;
@@ -195,7 +195,7 @@ J_3K = v_3k*(Y(1)^4/(Y(1)^4+K_D^4))*Y(8)/(Y(8)+K_3);
 
 Jipr	= kipr*Oipr*(Cer-C);
 Jleak	= kleak*(Cer-C);
-Jserca	= Vs*(C^2/(Ks^2+C^2))*(ATPc/(Ke+ATPc));%*(1-tanh ((Cer-200)/200/0.1))/2; 
+Jserca	= Vs*(C^2/(Ks^2+C^2))*(ATPc/(Ke+ATPc))*(1-tanh ((Cer-320)/200/0.1))/2; 
 Jncx	= Vncx*(Cm/C)*exp(p2*Vm);
 %Jmcu	= Vmcu*(C/K1)*(1+C/K1)^3*exp(p1*Vm)/((1+C/K1)^4+(L/(1+C/K2)^2.8));
 
